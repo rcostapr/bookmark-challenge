@@ -6,7 +6,7 @@ namespace App\Command;
 
 use App\Enum\ApplicationMode;
 use App\Service\EnvFileGenerator;
-use App\Service\GcpExternalSecretsRetriever;
+//use App\Service\GcpExternalSecretsRetriever;
 use Google\ApiCore\ApiException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -28,7 +28,7 @@ final class SecretsExternalDecryptToFileCommand extends Command
     private const DEFAULT_ENV_FILENAME = '/var/www/html/.env.' . self::APP_MODE_PLACEHOLDER . '.local';
 
     public function __construct(
-        private readonly GcpExternalSecretsRetriever $secretsRetriever,
+        //private readonly GcpExternalSecretsRetriever $secretsRetriever,
         private readonly EnvFileGenerator $envFileGenerator,
         private readonly LoggerInterface $consoleLogger,
         private readonly ApplicationMode $applicationMode,
@@ -43,7 +43,7 @@ final class SecretsExternalDecryptToFileCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
 
-        $variables = $this->secretsRetriever->getAllSecrets();
+        $variables = [];
 
         $envFile = str_replace(self::APP_MODE_PLACEHOLDER, $this->applicationMode->value, self::DEFAULT_ENV_FILENAME);
 

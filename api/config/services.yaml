@@ -50,15 +50,15 @@ services:
             $appName: '%application_name%'
             $environmentName: '%env(ENVIRONMENT_NAME)%'
 
-    App\EventSubscriber\GcpSecretRetrieverSubscriber:
-        arguments:
-            $projectId: '%env(default::GCP_PROJECT_ID)%'
-
-    App\Service\GcpExternalSecretsRetriever:
-        arguments:
-            $template: '%env_variable_template%'
-            $appName: '%application_name%'
-            $environmentName: '%env(ENVIRONMENT_NAME)%'
-            $projectId: '%env(default::GCP_PROJECT_ID)%'
+    #App\EventSubscriber\GcpSecretRetrieverSubscriber:
+    #    arguments:
+    #        $projectId: '%env(default::GCP_PROJECT_ID)%'
+    #
+    #App\Service\GcpExternalSecretsRetriever:
+    #    arguments:
+    #        $template: '%env_variable_template%'
+    #        $appName: '%application_name%'
+    #        $environmentName: '%env(ENVIRONMENT_NAME)%'
+    #        $projectId: '%env(default::GCP_PROJECT_ID)%'
 
     Monolog\Formatter\GoogleCloudLoggingFormatter:
