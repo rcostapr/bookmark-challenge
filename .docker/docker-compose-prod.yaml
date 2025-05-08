@@ -3,7 +3,7 @@ services:
     extends:
       file: common-services.yaml
       service: nginx
-    container_name: ${PROJECT_NAME:-symfony-react-skeleton}_nginx_prod
+    container_name: bookmark-challenge_nginx_prod
     build:
       target: deployment
     image: ${IMAGE_PATH:-external_registry/symfony-react-skeleton}/nginx
@@ -14,7 +14,7 @@ services:
     extends:
       file: common-services.yaml
       service: php
-    container_name: ${PROJECT_NAME:-symfony-react-skeleton}_php_prod
+    container_name: bookmark-challenge_php_prod
     # Environment name is generated in deploy step of CI. But is needed for /api/status endpoint, that is why we need to generate it here for local prod environment test.
     command: sh -c "echo 'ENVIRONMENT_NAME=prod' >> .env.local && php-fpm"
     build:
@@ -33,8 +33,8 @@ services:
 
 networks:
   public:
-    name: ${PROJECT_NAME:-symfony-react-skeleton}_public
+    name: bookmark-challenge_public
     external: true
   backend:
-    name: ${PROJECT_NAME:-symfony-react-skeleton}_backend
+    name: bookmark-challenge_backend
     external: true

@@ -3,10 +3,10 @@ services:
     extends:
       file: common-services.yaml
       service: nginx
-    container_name: ${PROJECT_NAME:-symfony-react-skeleton}_nginx
+    container_name: bookmark-challenge_nginx
     build:
       target: base
-    image: ${PROJECT_NAME:-symfony-react-skeleton}_nginx:1.25-alpine
+    image: bookmark-challenge_nginx:1.25-alpine
     ports:
       - "81:8080"
     volumes:
@@ -17,17 +17,17 @@ services:
     extends:
       file: common-services.yaml
       service: php
-    container_name: ${PROJECT_NAME:-symfony-react-skeleton}_php
+    container_name: bookmark-challenge_php
     build:
       target: local
       args:
         - symfony_mode=dev
-    image: ${PROJECT_NAME:-symfony-react-skeleton}_php:8.2-fpm-alpine
+    image: bookmark-challenge_php:8.2-fpm-alpine
     volumes:
       - ../api:/var/www/html
 
   postgres:
-    container_name: ${PROJECT_NAME:-symfony-react-skeleton}_postgres
+    container_name: bookmark-challenge_postgres
     image: postgres:${DATABASE_SERVER_VERSION:-15.3}
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -42,10 +42,10 @@ services:
 
 networks:
   public:
-    name: ${PROJECT_NAME:-symfony-react-skeleton}_public
+    name: bookmark-challenge_public
   backend:
-    name: ${PROJECT_NAME:-symfony-react-skeleton}_backend
+    name: bookmark-challenge_backend
 
 volumes:
   postgres-data:
-    name: ${PROJECT_NAME:-symfony-react-skeleton}_postgresql-data
+    name: bookmark-challenge_postgresql-data

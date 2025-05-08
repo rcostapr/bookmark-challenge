@@ -1,35 +1,65 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import symfonyLogo from './assets/symfony.svg';
+import { useEffect, useState } from 'react';
 import './App.css';
-import BackendValue from './BackendValue.tsx';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import BookmarkForm from './components/BookmarkForm.tsx';
+import BookmarkTable from './components/BookmarkTable.tsx';
+import TagDropdown from './components/TagDropdown.tsx';
+import { Bookmark } from './types/Bookmark.ts';
+import axios from 'axios';
+import { Tag } from './types/Tag.ts';
 
 function App(): JSX.Element {
-  const [count, setCount] = useState(0);
+  const [bookmarks, setbookmarks] = useState<Bookmark[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const queryClient = new QueryClient();
+  const [selectedTag, setSelectedTag] = useState<string>('');
+
+  const handleAddBookmark = (newBookmark: boolean) => {
+    fetchBookmarks(selectedTag);
+  };
+
+  const handleOnSelectTag = (Tag: string) => {
+    setSelectedTag(Tag)
+    fetchBookmarks(Tag);
+  };
+
+
+  // Fetch data from API
+  const fetchBookmarks = async (Tag:string) => {    
+    try {
+      const res = await axios.get<Bookmark[]>('/api/bookmarks?tag='+Tag);
+      setbookmarks(res.data);
+      const uniqueTags: Tag[] = [];
+      res.data.forEach(el => {
+        const tag:Tag = { value: el.tag, label: el.tag };
+        if(!uniqueTags.find(e => e.value === el.tag)){
+          uniqueTags.push(tag)
+          console.log(uniqueTags);          
+        }
+        setTags(uniqueTags);
+      });
+      setLoading(false);
+    } catch (err) {
+      console.error('Failed to fetch bookmarks', err);
+      setLoading(false);
+      setError('Failed to fetch bookmarks');
+    }
+  };
+
+  useEffect(() => {
+    fetchBookmarks(selectedTag);
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <>
-      <div>
-        <a href="https://symfony.com/doc/current/index.html" target="_blank" rel="noreferrer">
-          <img src={symfonyLogo} alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Symfony + React (Vite) skeleton demo</h1>
-      <QueryClientProvider client={queryClient}>
-        <BackendValue />
-      </QueryClientProvider>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>count is {count}</button>
-        <p>
-          Edit <code>src/BackendValue.tsx</code> and save to test HMR
-        </p>
-      </div>
+      <h1>Bookmarks</h1>
+      <BookmarkForm onAddBookmark={handleAddBookmark}/>
+      <TagDropdown tags={tags} onSelectTag={handleOnSelectTag} />
+      <BookmarkTable bookmarks={bookmarks} />
     </>
   );
 }
